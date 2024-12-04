@@ -9,6 +9,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\V1\Admin\ProgramController;
 use App\Http\Controllers\API\V1\Admin\FaqController;
 use App\Http\Controllers\API\V1\Admin\NewsController;
+use App\Http\Controllers\API\V1\Admin\FormsController;
+use App\Http\Controllers\API\V1\Admin\SeoModuleController;
+
 //use App\Http\Controllers\API\V1\ProfileController;
 
 Route::get('initialize', [MainController::class, 'init']);
@@ -77,5 +80,24 @@ Route::prefix('news')->middleware('auth:sanctum')->group(function () {
     Route::post('/', [NewsController::class, 'store'])->middleware(CheckRoleMiddleware::class . ':admin,content');
     Route::match(['PUT', 'PATCH'], '/{new}', [NewsController::class, 'update'])->middleware(CheckRoleMiddleware::class . ':admin,content');
     Route::delete('/{new}', [NewsController::class, 'destroy'])->middleware(CheckRoleMiddleware::class . ':admin');
+
+});
+
+
+Route::prefix('forms')->middleware('auth:sanctum')->group(function () {
+    Route::get('/', [FormsController::class, 'index'])->middleware(CheckRoleMiddleware::class . ':admin,seo,content');
+    Route::post('/', [FormsController::class, 'store'])->middleware(CheckRoleMiddleware::class . ':admin,content');
+    Route::match(['PUT', 'PATCH'], '/{form}', [FormsController::class, 'update'])->middleware(CheckRoleMiddleware::class . ':admin,content');
+    Route::delete('/{form}', [FormsController::class, 'destroy'])->middleware(CheckRoleMiddleware::class . ':admin');
+
+});
+
+
+Route::prefix('seo-modules')->middleware('auth:sanctum')->group(function () {
+
+    Route::get('/', [SeoModuleController::class, 'index'])->middleware(CheckRoleMiddleware::class . ':admin,seo,content');
+    Route::post('/', [SeoModuleController::class, 'store'])->middleware(CheckRoleMiddleware::class . ':admin,content');
+    Route::match(['PUT', 'PATCH'], '/{seo-module}', [SeoModuleController::class, 'update'])->middleware(CheckRoleMiddleware::class . ':admin,content');
+    Route::delete('/{seo-module}', [SeoModuleController::class, 'destroy'])->middleware(CheckRoleMiddleware::class . ':admin');
 
 });
