@@ -8,7 +8,7 @@ use App\Http\Middleware\CheckRoleMiddleware;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\V1\Admin\ProgramController;
 use App\Http\Controllers\API\V1\Admin\FaqController;
-
+use App\Http\Controllers\API\V1\Admin\NewsController;
 //use App\Http\Controllers\API\V1\ProfileController;
 
 Route::get('initialize', [MainController::class, 'init']);
@@ -63,10 +63,19 @@ Route::prefix('programs')->middleware('auth:sanctum')->group(function () {
 
 Route::prefix('faqs')->middleware('auth:sanctum')->group(function () {
 
-
     Route::get('/', [FaqController::class, 'index'])->middleware(CheckRoleMiddleware::class . ':admin,seo,content');
     Route::post('/', [FaqController::class, 'store'])->middleware(CheckRoleMiddleware::class . ':admin,seo,content');
     Route::match(['PUT', 'PATCH'], '/{faq}', [FaqController::class, 'update'])->middleware(CheckRoleMiddleware::class . ':admin,seo,content');
     Route::delete('/{faq}', [FaqController::class, 'destroy'])->middleware(CheckRoleMiddleware::class . ':admin');
+
+});
+
+
+Route::prefix('news')->middleware('auth:sanctum')->group(function () {
+
+    Route::get('/', [NewsController::class, 'index'])->middleware(CheckRoleMiddleware::class . ':admin,seo,content');
+    Route::post('/', [NewsController::class, 'store'])->middleware(CheckRoleMiddleware::class . ':admin,content');
+    Route::match(['PUT', 'PATCH'], '/{new}', [NewsController::class, 'update'])->middleware(CheckRoleMiddleware::class . ':admin,content');
+    Route::delete('/{new}', [NewsController::class, 'destroy'])->middleware(CheckRoleMiddleware::class . ':admin');
 
 });
