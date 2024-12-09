@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\API\V1\Admin;
 
-use App\Enums\HttpStatus;
-use App\Enums\UserRoles;
-use App\Filters\UserRoleFilter;
-use App\Http\Controllers\ApiController;
-use App\Http\Requests\Auth\RegisterRequest;
-use App\Http\Resources\Collections\UserCollection;
-use App\Http\Resources\UserResource;
 use App\Models\User;
-use App\Repositories\UserRepository;
+use App\Enums\UserRoles;
+use App\Enums\HttpStatus;
 use Illuminate\Http\Request;
+use App\Filters\UserRoleFilter;
 use Illuminate\Validation\Rule;
+use App\Http\Resources\UserResource;
+use App\Repositories\UserRepository;
+use App\Http\Controllers\ApiController;
+use App\Http\Requests\Auth\CreateUserRequest;
+use App\Http\Resources\Collections\UserCollection;
 
 class UserController extends ApiController
 {
@@ -28,10 +28,10 @@ class UserController extends ApiController
 
         UserRoleFilter::apply($usersQuery, $role);
 
-        return new UserCollection($usersQuery->with(['shops', 'shops.feeds'])->paginate(30));
+        return new UserCollection($usersQuery->paginate(30));
     }
 
-    public function store(RegisterRequest $request)
+    public function store(CreateUserRequest $request)
     {
         $user = $this->userRepository->register($request->validated());
 
@@ -40,7 +40,7 @@ class UserController extends ApiController
 
     public function show(User $user)
     {
-        return new UserResource($user->load(['shops', 'shops.feeds']));
+        return new UserResource($user);
     }
 
     public function update(Request $request, User $user)

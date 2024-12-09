@@ -2,14 +2,12 @@
 
 namespace App\Http\Requests\Auth;
 
-use App\Enums\UserRoles;
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules;
 
 
-class RegisterRequest extends FormRequest
+class CreateUserRequest extends FormRequest
 {
 
     public function rules(): array
@@ -20,7 +18,7 @@ class RegisterRequest extends FormRequest
             'phone' => ['nullable', 'string', 'regex:/^((8|\+7)[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7,10}$/i'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique(User::class)],
             'role' => ['nullable', Rule::in(['user', 'supplier'])],
-            'password' => ['required', 'confirmed'],
+            'password' => ['required'],
         ];
     }
 
@@ -34,7 +32,6 @@ class RegisterRequest extends FormRequest
             'type.required' => 'Пожалуйста, выберите тип.',
             'type.in' => 'Выбранный тип не допустим. Пожалуйста, выберите один из доступных вариантов.',
             'password.required' => 'Пожалуйста, введите пароль.',
-            'password.confirmed' => 'Пароль и его подтверждение не совпадают. Пожалуйста, убедитесь, что они совпадают.',
         ];
     }
 
