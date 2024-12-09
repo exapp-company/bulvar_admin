@@ -30,6 +30,10 @@ class DomoplanerFlatService extends DomoplanerBaseService
                 CURLOPT_HTTPHEADER => $headers
             ]);
 
+            if(empty($data)){
+                return $this->error();
+            }
+
             $this->setCache('flat_' . $flatId, $data);
         }
 
