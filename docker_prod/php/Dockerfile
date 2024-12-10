@@ -1,6 +1,5 @@
 FROM php:8.2-fpm
 
-
 RUN apt-get update && apt-get install -y \
     git \
     curl \
@@ -31,7 +30,21 @@ RUN docker-php-ext-enable opcache \
     && echo 'opcache.revalidate_freq=2' >> /usr/local/etc/php/conf.d/opcache-recommended.ini \
     && echo 'opcache.fast_shutdown=1' >> /usr/local/etc/php/conf.d/opcache-recommended.ini
 
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
+COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
+
+COPY . .
+
+RUN composer install --no-dev --optimize-autoloader
+
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache \
+    && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
+
+RUN php artisan config:cache \
+    && php artisan route:cache \
+    && php artisan view:cache
+
+EXPOSE 9000
+
+CMD ["php-fpm"]
