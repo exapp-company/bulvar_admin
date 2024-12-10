@@ -1,6 +1,7 @@
-FROM nginx:stable-alpine
+FROM nginx:alpine
 
-COPY ./docker_prod/nginx/default.conf /etc/nginx/conf.d/default.conf
-RUN touch /var/run/nginx.pid \
-    && chown -R nginx:nginx /var/run/nginx.pid \
-    && chown -R nginx:nginx /var/cache/nginx
+WORKDIR /var/www
+
+RUN rm /etc/nginx/conf.d/default.conf
+
+COPY docker_prod/nginx/default.conf /etc/nginx/conf.d/

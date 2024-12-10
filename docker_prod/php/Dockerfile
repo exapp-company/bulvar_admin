@@ -34,10 +34,8 @@ COPY --from=composer:2.6 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www
 
-# Копируем только файлы, необходимые для composer
 COPY composer.json composer.lock ./
 
-# Создаём необходимые директории
 RUN mkdir -p \
     storage/app/public \
     storage/framework/cache \
@@ -46,26 +44,16 @@ RUN mkdir -p \
     storage/logs \
     bootstrap/cache
 
-# Устанавливаем зависимости
 RUN composer install --no-dev --optimize-autoloader --no-scripts
 
-# Теперь копируем остальные файлы проекта
 COPY . .
 
-# Устанавливаем права
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache \
     && chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
-# Запускаем скрипты composer и кэширование
-RUN composer dump-autoload --optimize \
-    && php artisan config:cache \
-    && php artisan route:cache \
-    && php artisan view:cache
-
-RUN php artisan migrate --force \
-    && php artisan db:seed --force
-
+COPY docker_prod/php/entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/entrypoint.sh
 
 EXPOSE 9000
 
-CMD ["php-fpm"]
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
