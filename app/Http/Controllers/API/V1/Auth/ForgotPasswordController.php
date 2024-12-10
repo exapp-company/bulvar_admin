@@ -6,7 +6,6 @@ use App\Enums\HttpStatus;
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\Auth\ForgotPasswordRequest;
 use App\Notifications\ResetPasswordNotification;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Password;
 
 class ForgotPasswordController extends ApiController

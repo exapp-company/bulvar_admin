@@ -66,9 +66,10 @@ Route::prefix('faqs')->middleware('auth:sanctum')->group(function () {
 Route::prefix('news')->middleware('auth:sanctum')->group(function () {
 
     Route::get('/', [NewsController::class, 'index'])->middleware(CheckRoleMiddleware::class . ':admin,seo,content');
+    Route::get('/{news}', [NewsController::class, 'show']);
     Route::post('/', [NewsController::class, 'store'])->middleware(CheckRoleMiddleware::class . ':admin,content');
-    Route::match(['PUT', 'PATCH'], '/{new}', [NewsController::class, 'update'])->middleware(CheckRoleMiddleware::class . ':admin,content');
-    Route::delete('/{new}', [NewsController::class, 'destroy'])->middleware(CheckRoleMiddleware::class . ':admin');
+    Route::match(['PUT', 'PATCH'], '/{news}', [NewsController::class, 'update'])->middleware(CheckRoleMiddleware::class . ':admin,content');
+    Route::delete('/{news}', [NewsController::class, 'destroy'])->middleware(CheckRoleMiddleware::class . ':admin');
 });
 
 

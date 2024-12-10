@@ -17,7 +17,7 @@ class StoreUpdateNewsRequest extends FormRequest
     {
         return [
             'title' => ['required','string'],
-            'description' => ['required','string'],
+            'content' => ['required','string'],
             'is_show' =>  ['nullable','boolean'],
 
         ];

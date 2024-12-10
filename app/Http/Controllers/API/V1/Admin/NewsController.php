@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API\V1\Admin;
 
 use App\Enums\HttpStatus;
 use App\Http\Requests\Admin\StoreUpdateNewsRequest;
-use App\Http\Requests\Admin\StoreUpdateProgramRequest;
 use App\Http\Resources\NewsResource;
 use App\Models\News;
 use App\Traits\ApiResponse;
@@ -21,6 +20,11 @@ class NewsController
         return NewsResource::collection($news);
     }
 
+    public function show(News $news): NewsResource
+    {
+        return new NewsResource($news);
+    }
+
     public function store(StoreUpdateNewsRequest $request): JsonResponse
     {
         $data = $request->validated();
@@ -29,17 +33,15 @@ class NewsController
         return $this->success('News created successfully', HttpStatus::created);
     }
 
-    public function update(StoreUpdateProgramRequest $request, News $news): JsonResponse
+    public function update(StoreUpdateNewsRequest $request, News $news)
     {
         $news->update($request->validated());
         return $this->success('News updated successfully');
-
     }
 
     public function destroy(News $news): JsonResponse
     {
         $news->delete();
         return $this->success('News deleted successfully');
-
     }
 }

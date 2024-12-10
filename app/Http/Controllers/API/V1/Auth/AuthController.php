@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API\V1\Auth;
 
 use App\Http\Controllers\ApiController;
 use App\Http\Requests\Auth\LoginRequest;
-use App\Http\Requests\RefreshTokenRequest;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use App\Repositories\UserRepository;
@@ -44,10 +43,5 @@ class AuthController extends ApiController
     {
         $request->user()->currentAccessToken()->delete();
         return $this->success(__('Выход выполнен успешно'));
-    }
-
-    public function refresh(RefreshTokenRequest $request)
-    {
-        abort(422, "DEPRECATED");
     }
 }
