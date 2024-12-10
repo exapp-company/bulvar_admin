@@ -9,20 +9,31 @@ class DomoplanerFeedService extends DomoplanerBaseService
 {
     const CACHE_KEY = 'all';
 
-     /**
+    /**
      * getAllItems
      * Получение данных обо всех квартирах
+     * Тип объекта -
+     *      null - будут возвращены все доступные фиду объекты
+     *      0 - квартиры
+     *      1 - паркинги
+     *      2 - кладовые
+     * @param  int $type - Тип объекта
      * @return array
      */
-    public function getAllItems(): array
+
+    public function getAllItems(int $type = null, array $filters = []): array
     {
         $data = $this->getFeed();
 
-        if(!$data){
+        if (!$data) {
             return $this->error();
         }
 
-        return $data;
+        if (!$type) {
+            return $data;
+        }
+
+        return $this->mapData($data, $type);
     }
 
     /**
@@ -34,24 +45,36 @@ class DomoplanerFeedService extends DomoplanerBaseService
     {
         $data = $this->getCache(self::CACHE_KEY);
 
-        if (empty($data) || !isset($data['data'])) {
-
+        if (empty($data)) {
             $url = config('domoplaner.feed_url');
 
             $data = $this->request([
-                    CURLOPT_URL => $url,
-                    CURLOPT_RETURNTRANSFER => 1,
-                    CURLOPT_CUSTOMREQUEST => 'GET'
+                CURLOPT_URL => $url,
+                CURLOPT_RETURNTRANSFER => 1,
+                CURLOPT_CUSTOMREQUEST => 'GET'
             ]);
 
-            if (!$data) {
-                return null;
-            }
+
             $this->setCache(self::CACHE_KEY, $data);
         }
 
         $parsed = json_decode($data, 1);
 
         return $parsed['data'];
+    }
+
+
+    public function mapData(array $data, int $type) :array
+    {
+        $mapped = [];
+
+        foreach($data as $item){
+            if($item['type'] !== $type){
+                continue;
+            }
+            $mapped[] = $item;
+        }
+
+        return $mapped;
     }
 }
