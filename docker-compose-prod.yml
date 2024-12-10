@@ -32,7 +32,6 @@ services:
       MYSQL_USER: ${DB_USERNAME}
     volumes:
       - dbdata:/var/lib/mysql
-      - ./docker_prod/mysql/my.cnf:/etc/mysql/my.cnf
     networks:
       - app-network
 
