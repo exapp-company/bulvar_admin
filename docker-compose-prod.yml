@@ -1,6 +1,8 @@
 services:
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: docker_prod/php/Dockerfile
     volumes:
       - .:/var/www
       - ./docker_prod/php/local.ini:/usr/local/etc/php/conf.d/local.ini
@@ -10,7 +12,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile.nginx
+      dockerfile: docker_prod/nginx/Dockerfile
     ports:
       - "8000:80"
     volumes:

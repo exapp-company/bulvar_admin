@@ -1,7 +1,5 @@
 FROM php:8.2-fpm
 
-ARG USER=www-data
-ARG UID=1000
 
 RUN apt-get update && apt-get install -y \
     git \
@@ -35,15 +33,5 @@ RUN docker-php-ext-enable opcache \
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-RUN useradd -G www-data,root -u $UID -d /home/$USER $USER \
-    && mkdir -p /home/$USER/.composer \
-    && chown -R $USER:$USER /home/$USER
 
 WORKDIR /var/www
-
-FROM nginx:stable-alpine
-
-COPY docker_prod/nginx/default.conf /etc/nginx/conf.d/default.conf
-RUN touch /var/run/nginx.pid \
-    && chown -R nginx:nginx /var/run/nginx.pid \
-    && chown -R nginx:nginx /var/cache/nginx
